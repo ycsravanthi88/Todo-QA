@@ -8,7 +8,7 @@ describe("Verizon 5G Labs - Todo App", () => {
   });
 
   it("displays three items by default", () => {
-    cy.get("li.todo").should("have.length", 3);
+    cy.get(".todo").should("have.length", 3);
     cy.get(".todo-label").first().should("have.text", "Eat");
     cy.get(".todo-label").last().should("have.text", "Repeat");
   });

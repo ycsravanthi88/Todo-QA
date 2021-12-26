@@ -1,4 +1,6 @@
 import React, { useState } from "react";
+import FormLabel from "./FormLabel";
+import { INITIAL_LABEL_STATE, LABEL_NAMES } from "./utils";
 
 export function isStringValid(string) {
   if (string.length > 0 && typeof string === "string") {
@@ -8,9 +10,28 @@ export function isStringValid(string) {
   }
 }
 
+function renderLabelsOptions(labels, handleLabelChange) {
+  return (
+    <div className="form-labels-container">
+      Select color labels:
+      {LABEL_NAMES.map((color, index) => {
+        return (
+          <FormLabel
+            key={index}
+            color={color}
+            handleLabelChange={handleLabelChange}
+            checked={labels[color]}
+          />
+        );
+      })}
+    </div>
+  );
+}
+
 function Form(props) {
   const [name, setName] = useState("");
   const [error, setError] = useState(false);
+  const [labels, setLabels] = useState(INITIAL_LABEL_STATE);
 
   function handleSubmit(e) {
     e.preventDefault();
@@ -18,13 +39,21 @@ function Form(props) {
       setError(true);
       return;
     }
-    props.addTask(name);
+    const taskLabels = LABEL_NAMES.filter((n) => labels[n]);
+    props.addTask(name, taskLabels);
     setName("");
+    setLabels(INITIAL_LABEL_STATE);
     setError(false);
   }
 
   function handleChange(e) {
     setName(e.target.value);
+  }
+
+  function handleLabelChange(e) {
+    const label = e.target.value;
+
+    setLabels({ ...labels, [label]: !labels[label] });
   }
 
   return (
@@ -45,6 +74,7 @@ function Form(props) {
         value={name}
         onChange={handleChange}
       />
+      {renderLabelsOptions(labels, handleLabelChange)}
       {error ? (
         <div
           className="error-message"

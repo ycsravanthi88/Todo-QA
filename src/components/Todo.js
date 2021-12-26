@@ -1,4 +1,7 @@
 import React, { useEffect, useRef, useState } from "react";
+import FormLabel from "./FormLabel";
+import { LABEL_NAMES } from "./utils";
+import ViewLabel from "./ViewLabel";
 
 function usePrevious(value) {
   const ref = useRef();
@@ -8,9 +11,43 @@ function usePrevious(value) {
   return ref.current;
 }
 
+function renderLabels(labels) {
+  return (
+    <>
+      {labels.map((color, index) => {
+        return <ViewLabel color={color} key={index} />;
+      })}
+    </>
+  );
+}
+
+function renderLabelOptions(newLabels, handleLabelChange) {
+  return (
+    <div className="form-labels-container">
+      {LABEL_NAMES.map((color, index) => {
+        return (
+          <FormLabel
+            key={index}
+            color={color}
+            handleLabelChange={handleLabelChange}
+            checked={newLabels[color]}
+          />
+        );
+      })}
+    </div>
+  );
+}
+
 export default function Todo(props) {
+  const { labels } = props;
   const [isEditing, setEditing] = useState(false);
   const [newName, setNewName] = useState("");
+  // initial state of edit task should be existing label states
+  const [newLabels, setNewLabels] = useState({
+    lightgreen: labels.includes("lightgreen"),
+    lightsalmon: labels.includes("lightsalmon"),
+    mediumpurple: labels.includes("mediumpurple"),
+  });
 
   const editFieldRef = useRef(null);
   const editButtonRef = useRef(null);
@@ -21,12 +58,18 @@ export default function Todo(props) {
     setNewName(e.target.value);
   }
 
+  function handleLabelChange(e) {
+    const name = e.target.value;
+    setNewLabels({ ...newLabels, [name]: !newLabels[name] });
+  }
+
   function handleSubmit(e) {
     e.preventDefault();
     if (!newName.trim()) {
       return;
     }
-    props.editTask(props.id, newName);
+    const newTaskLabels = LABEL_NAMES.filter((n) => newLabels[n]);
+    props.editTask(props.id, newName, newTaskLabels);
     setNewName("");
     setEditing(false);
   }
@@ -46,6 +89,7 @@ export default function Todo(props) {
           ref={editFieldRef}
         />
       </div>
+      {renderLabelOptions(newLabels, handleLabelChange)}
       <div className="btn-group">
         <button
           type="button"
@@ -76,6 +120,7 @@ export default function Todo(props) {
           {props.name}
         </label>
       </div>
+      {renderLabels(labels)}
       <div className="btn-group">
         <button
           type="button"

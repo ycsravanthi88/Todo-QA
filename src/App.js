@@ -42,12 +42,12 @@ function App(props) {
     setTasks(remainingTasks);
   }
 
-  function editTask(id, newName) {
+  function editTask(id, newName, newLabels) {
     const editedTaskList = tasks.map((task) => {
       // if this task has the same ID as the edited task
       if (id === task.id) {
         //
-        return { ...task, name: newName };
+        return { ...task, name: newName, labels: newLabels };
       }
       return task;
     });
@@ -65,6 +65,7 @@ function App(props) {
         toggleTaskCompleted={toggleTaskCompleted}
         deleteTask={deleteTask}
         editTask={editTask}
+        labels={task.labels}
       />
     ));
 
@@ -77,8 +78,13 @@ function App(props) {
     />
   ));
 
-  function addTask(name) {
-    const newTask = { id: "todo-" + nanoid(), name: name, completed: false };
+  function addTask(name, labels) {
+    const newTask = {
+      id: "todo-" + nanoid(),
+      name: name,
+      labels: labels,
+      completed: false,
+    };
     setTasks([...tasks, newTask]);
   }
 

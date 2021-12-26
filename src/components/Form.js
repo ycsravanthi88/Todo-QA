@@ -1,9 +1,9 @@
-import React, { useState } from 'react';
-import FormLabel from './FormLabel'
-import { INITIAL_LABEL_STATE, LABEL_NAMES } from './utils';
+import React, { useState } from "react";
+import FormLabel from "./FormLabel";
+import { INITIAL_LABEL_STATE, LABEL_NAMES } from "./utils";
 
 export function isStringValid(string) {
-  if (string.length > 0 && typeof string === 'string') {
+  if (string.length > 0 && typeof string === "string") {
     return true;
   } else {
     return false;
@@ -29,7 +29,7 @@ function renderLabelsOptions(labels, handleLabelChange) {
 }
 
 function Form(props) {
-  const [name, setName] = useState('');
+  const [name, setName] = useState("");
   const [error, setError] = useState(false);
   const [labels, setLabels] = useState(INITIAL_LABEL_STATE);
 
@@ -39,10 +39,10 @@ function Form(props) {
       setError(true);
       return;
     }
-    const taskLabels = LABEL_NAMES.filter(n => labels[n])
+    const taskLabels = LABEL_NAMES.filter((n) => labels[n]);
     props.addTask(name, taskLabels);
-    setName('');
-    setLabels(INITIAL_LABEL_STATE)
+    setName("");
+    setLabels(INITIAL_LABEL_STATE);
     setError(false);
   }
 
@@ -50,10 +50,10 @@ function Form(props) {
     setName(e.target.value);
   }
 
-  function handleLabelChange(e){
-    const label = e.target.value
+  function handleLabelChange(e) {
+    const label = e.target.value;
 
-    setLabels({...labels, [label]: !labels[label]})
+    setLabels({ ...labels, [label]: !labels[label] });
   }
 
   return (
@@ -78,7 +78,7 @@ function Form(props) {
       {error ? (
         <div
           className="error-message"
-          style={{ color: 'red', paddingLeft: '20px', paddingBottom: '5px' }}
+          style={{ color: "red", paddingLeft: "20px", paddingBottom: "5px" }}
           data-testid="error-message"
         >
           <li>You may not add a blank task!</li>

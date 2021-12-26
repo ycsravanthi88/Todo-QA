@@ -1,4 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react';
+import FormLabel from './FormLabel';
+import { LABEL_NAMES } from './utils';
 import ViewLabel from './ViewLabel';
 
 function usePrevious(value) {
@@ -23,6 +25,12 @@ export default function Todo(props) {
   const { labels } = props;
   const [isEditing, setEditing] = useState(false);
   const [newName, setNewName] = useState('');
+  // initial state of edit task should be existing label states
+  const [newLabels, setNewLabels] = useState({
+    lightgreen: labels.includes('lightgreen'),
+    lightsalmon: labels.includes('lightsalmon'),
+    mediumpurple: labels.includes('mediumpurple'),
+  });
 
   const editFieldRef = useRef(null);
   const editButtonRef = useRef(null);
@@ -33,12 +41,35 @@ export default function Todo(props) {
     setNewName(e.target.value);
   }
 
+  function handleLabelChange(e) {
+    const name = e.target.value;
+    setNewLabels({ ...newLabels, [name]: !newLabels[name] });
+  }
+
+  function renderLabelOptions() {
+    return (
+      <div className="form-labels-container">
+        {LABEL_NAMES.map((color, index) => {
+          return (
+            <FormLabel
+              key={index}
+              color={color}
+              handleLabelChange={handleLabelChange}
+              checked={newLabels[color]}
+            />
+          );
+        })}
+      </div>
+    );
+  }
+
   function handleSubmit(e) {
     e.preventDefault();
     if (!newName.trim()) {
       return;
     }
-    props.editTask(props.id, newName);
+    const newTaskLabels = LABEL_NAMES.filter((n) => newLabels[n]);
+    props.editTask(props.id, newName, newTaskLabels);
     setNewName('');
     setEditing(false);
   }
@@ -58,6 +89,7 @@ export default function Todo(props) {
           ref={editFieldRef}
         />
       </div>
+      {renderLabelOptions()}
       <div className="btn-group">
         <button
           type="button"

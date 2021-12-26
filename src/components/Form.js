@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import FormLabel from './FormLabel'
+import { INITIAL_LABEL_STATE, LABEL_NAMES } from './utils';
 
 export function isStringValid(string) {
   if (string.length > 0 && typeof string === 'string') {
@@ -8,14 +9,6 @@ export function isStringValid(string) {
     return false;
   }
 }
-
-const INITIAL_LABEL_STATE = {
-  lightgreen: false,
-  lightsalmon: false,
-  mediumpurple: false,
-}
-
-const LABEL_NAMES = Object.keys(INITIAL_LABEL_STATE)
 
 function Form(props) {
   const [name, setName] = useState('');
@@ -31,6 +24,7 @@ function Form(props) {
     const taskLabels = LABEL_NAMES.filter(n => labels[n])
     props.addTask(name, taskLabels);
     setName('');
+    setLabels(INITIAL_LABEL_STATE)
     setError(false);
   }
 
@@ -44,7 +38,7 @@ function Form(props) {
     setLabels({...labels, [label]: !labels[label]})
   }
 
-  function renderLabelsOptions(labels) {
+  function renderLabelsOptions() {
     return (
       <div className="form-labels-container">
         Select color labels:
@@ -80,7 +74,7 @@ function Form(props) {
         value={name}
         onChange={handleChange}
       />
-      {renderLabelsOptions(labels)}
+      {renderLabelsOptions()}
       {error ? (
         <div
           className="error-message"

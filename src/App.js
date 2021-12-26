@@ -43,7 +43,6 @@ function App(props) {
   }
 
   function editTask(id, newName, newLabels) {
-    console.log("newLabels",newLabels)
     const editedTaskList = tasks.map((task) => {
       // if this task has the same ID as the edited task
       if (id === task.id) {

@@ -10,6 +10,24 @@ export function isStringValid(string) {
   }
 }
 
+function renderLabelsOptions(labels, handleLabelChange) {
+  return (
+    <div className="form-labels-container">
+      Select color labels:
+      {LABEL_NAMES.map((color, index) => {
+        return (
+          <FormLabel
+            key={index}
+            color={color}
+            handleLabelChange={handleLabelChange}
+            checked={labels[color]}
+          />
+        );
+      })}
+    </div>
+  );
+}
+
 function Form(props) {
   const [name, setName] = useState('');
   const [error, setError] = useState(false);
@@ -38,24 +56,6 @@ function Form(props) {
     setLabels({...labels, [label]: !labels[label]})
   }
 
-  function renderLabelsOptions() {
-    return (
-      <div className="form-labels-container">
-        Select color labels:
-        {LABEL_NAMES.map((color, index) => {
-          return (
-            <FormLabel
-              key={index}
-              color={color}
-              handleLabelChange={handleLabelChange}
-              checked={labels[color]}
-            />
-          );
-        })}
-      </div>
-    );
-  }
-
   return (
     <form onSubmit={handleSubmit}>
       <h2 className="label-wrapper">
@@ -74,7 +74,7 @@ function Form(props) {
         value={name}
         onChange={handleChange}
       />
-      {renderLabelsOptions()}
+      {renderLabelsOptions(labels, handleLabelChange)}
       {error ? (
         <div
           className="error-message"

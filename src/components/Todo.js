@@ -21,6 +21,23 @@ function renderLabels(labels) {
   );
 }
 
+function renderLabelOptions(newLabels, handleLabelChange) {
+  return (
+    <div className="form-labels-container">
+      {LABEL_NAMES.map((color, index) => {
+        return (
+          <FormLabel
+            key={index}
+            color={color}
+            handleLabelChange={handleLabelChange}
+            checked={newLabels[color]}
+          />
+        );
+      })}
+    </div>
+  );
+}
+
 export default function Todo(props) {
   const { labels } = props;
   const [isEditing, setEditing] = useState(false);
@@ -44,23 +61,6 @@ export default function Todo(props) {
   function handleLabelChange(e) {
     const name = e.target.value;
     setNewLabels({ ...newLabels, [name]: !newLabels[name] });
-  }
-
-  function renderLabelOptions() {
-    return (
-      <div className="form-labels-container">
-        {LABEL_NAMES.map((color, index) => {
-          return (
-            <FormLabel
-              key={index}
-              color={color}
-              handleLabelChange={handleLabelChange}
-              checked={newLabels[color]}
-            />
-          );
-        })}
-      </div>
-    );
   }
 
   function handleSubmit(e) {
@@ -89,7 +89,7 @@ export default function Todo(props) {
           ref={editFieldRef}
         />
       </div>
-      {renderLabelOptions()}
+      {renderLabelOptions(newLabels, handleLabelChange)}
       <div className="btn-group">
         <button
           type="button"

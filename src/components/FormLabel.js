@@ -1,11 +1,12 @@
 import React from "react";
 
 export default function FormLabel(props) {
-  const { handleLabelChange, color, checked } = props;
+  const { handleLabelChange, color, checked, key } = props;
   return (
     <button
       type="button"
       value={color}
+      data-testid={`new-todo-input-${key}`}
       name="label"
       onClick={handleLabelChange}
       className={

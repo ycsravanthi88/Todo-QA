@@ -15,7 +15,23 @@ describe("Verizon 5G Labs - Todo App", () => {
 
   it("can add new todo items", () => {
     const newTodo = "Mow the lawn";
+
     cy.get("[data-testid=new-todo-input]").type(`${newTodo}{enter}`);
+    cy.get(".todo-label")
+      .should("have.length", 4)
+      .last()
+      .should("have.text", newTodo);
+  });
+
+  it("can add a new todo item with labels", () => {
+    const newTodo = "Wash car";
+    cy.get("[data-testid=new-todo-input]").type(`${newTodo}`);
+
+    cy.get(".form-labels-unchecked").first().click();
+    cy.get(".form-labels-unchecked").first().click();
+
+    cy.get("[data-testid=add-todo-button]").click();
+
     cy.get(".todo-label")
       .should("have.length", 4)
       .last()

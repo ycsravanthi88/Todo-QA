@@ -1,16 +1,26 @@
-import React, { useState } from "react";
+import React, { useState } from 'react';
+import FormLabel from './FormLabel'
 
 export function isStringValid(string) {
-  if (string.length > 0 && typeof string === "string") {
+  if (string.length > 0 && typeof string === 'string') {
     return true;
   } else {
     return false;
   }
 }
 
+const INITIAL_LABEL_STATE = {
+  lightgreen: false,
+  lightsalmon: false,
+  mediumpurple: false,
+}
+
+const LABEL_NAMES = Object.keys(INITIAL_LABEL_STATE)
+
 function Form(props) {
-  const [name, setName] = useState("");
+  const [name, setName] = useState('');
   const [error, setError] = useState(false);
+  const [labels, setLabels] = useState(INITIAL_LABEL_STATE);
 
   function handleSubmit(e) {
     e.preventDefault();
@@ -18,13 +28,38 @@ function Form(props) {
       setError(true);
       return;
     }
-    props.addTask(name);
-    setName("");
+    const taskLabels = LABEL_NAMES.filter(n => labels[n])
+    props.addTask(name, taskLabels);
+    setName('');
     setError(false);
   }
 
   function handleChange(e) {
     setName(e.target.value);
+  }
+
+  function handleLabelChange(e){
+    const label = e.target.value
+
+    setLabels({...labels, [label]: !labels[label]})
+  }
+
+  function renderLabelsOptions(labels) {
+    return (
+      <div className="form-labels-container">
+        Select color labels:
+        {LABEL_NAMES.map((color, index) => {
+          return (
+            <FormLabel
+              key={index}
+              color={color}
+              handleLabelChange={handleLabelChange}
+              checked={labels[color]}
+            />
+          );
+        })}
+      </div>
+    );
   }
 
   return (
@@ -45,10 +80,11 @@ function Form(props) {
         value={name}
         onChange={handleChange}
       />
+      {renderLabelsOptions(labels)}
       {error ? (
         <div
           className="error-message"
-          style={{ color: "red", paddingLeft: "20px", paddingBottom: "5px" }}
+          style={{ color: 'red', paddingLeft: '20px', paddingBottom: '5px' }}
           data-testid="error-message"
         >
           <li>You may not add a blank task!</li>

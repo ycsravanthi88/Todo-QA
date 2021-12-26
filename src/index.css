@@ -123,6 +123,12 @@ body {
   clip: rect(1px, 1px, 1px, 1px);
   white-space: nowrap;
 }
+.stack-small {
+  border: 1px #888888 solid;
+  padding: 2rem;
+  border-radius: 15px;
+  box-shadow: 2px 1px 3px 0px #888888;
+}
 [class*="stack"] > * {
   margin-top: 0;
   margin-bottom: 0;
@@ -289,4 +295,36 @@ body {
 }
 .c-cb > input[type="checkbox"]:checked + label::after {
   opacity: 1;
+}
+.show-labels {
+  display: inline-block;
+  width: 60px;
+  height: 10px;
+  border-radius: 15px;
+  margin-right: 5px;
+}
+
+.form-labels-container {
+  display: flex;
+  align-items: center;
+}
+
+.form-labels {
+  width: 100px;
+  height: 30px;
+  margin: 10px 0px 10px 10px;
+  border-radius: 5px;
+}
+
+.form-labels:hover {
+  cursor: pointer;
+}
+
+.form-labels-unchecked {
+  opacity: 0.6;
+  border: 2px solid lightgray;
+}
+
+.form-labels-checked {
+  border: 2px solid black;
 }

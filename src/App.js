@@ -1,8 +1,8 @@
-import React, { useState, useRef, useEffect } from "react";
-import Form from "./components/Form";
-import FilterButton from "./components/FilterButton";
-import Todo from "./components/Todo";
-import { nanoid } from "nanoid";
+import React, { useState, useRef, useEffect } from 'react';
+import Form from './components/Form';
+import FilterButton from './components/FilterButton';
+import Todo from './components/Todo';
+import { nanoid } from 'nanoid';
 
 function usePrevious(value) {
   const ref = useRef();
@@ -22,7 +22,7 @@ const FILTER_NAMES = Object.keys(FILTER_MAP);
 
 function App(props) {
   const [tasks, setTasks] = useState(props.tasks);
-  const [filter, setFilter] = useState("All");
+  const [filter, setFilter] = useState('All');
 
   function toggleTaskCompleted(id) {
     const updatedTasks = tasks.map((task) => {
@@ -65,6 +65,7 @@ function App(props) {
         toggleTaskCompleted={toggleTaskCompleted}
         deleteTask={deleteTask}
         editTask={editTask}
+        labels={task.labels}
       />
     ));
 
@@ -77,12 +78,17 @@ function App(props) {
     />
   ));
 
-  function addTask(name) {
-    const newTask = { id: "todo-" + nanoid(), name: name, completed: false };
+  function addTask(name, labels) {
+    const newTask = {
+      id: 'todo-' + nanoid(),
+      name: name,
+      labels: labels,
+      completed: false,
+    };
     setTasks([...tasks, newTask]);
   }
 
-  const tasksNoun = taskList.length !== 1 ? "tasks" : "task";
+  const tasksNoun = taskList.length !== 1 ? 'tasks' : 'task';
   const headingText = `${taskList.length} ${tasksNoun} remaining`;
 
   const listHeadingRef = useRef(null);

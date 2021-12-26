@@ -1,4 +1,5 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from 'react';
+import ViewLabel from './ViewLabel';
 
 function usePrevious(value) {
   const ref = useRef();
@@ -8,9 +9,20 @@ function usePrevious(value) {
   return ref.current;
 }
 
+function renderLabels(labels) {
+  return (
+    <>
+      {labels.map((color, index) => {
+        return <ViewLabel color={color} key={index} />;
+      })}
+    </>
+  );
+}
+
 export default function Todo(props) {
+  const { labels } = props;
   const [isEditing, setEditing] = useState(false);
-  const [newName, setNewName] = useState("");
+  const [newName, setNewName] = useState('');
 
   const editFieldRef = useRef(null);
   const editButtonRef = useRef(null);
@@ -27,7 +39,7 @@ export default function Todo(props) {
       return;
     }
     props.editTask(props.id, newName);
-    setNewName("");
+    setNewName('');
     setEditing(false);
   }
 
@@ -76,6 +88,7 @@ export default function Todo(props) {
           {props.name}
         </label>
       </div>
+      {renderLabels(labels)}
       <div className="btn-group">
         <button
           type="button"

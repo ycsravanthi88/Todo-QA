@@ -2,7 +2,14 @@ import React from "react";
 import renderer from "react-test-renderer";
 import Todo from "./Todo";
 
-const TODO = [{ id: "todo-0", name: "Eat", completed: true }];
+const TODO = [
+  {
+    id: "todo-0",
+    name: "Eat",
+    labels: ["lightgreen", "lightsalmon"],
+    completed: true,
+  },
+];
 
 describe("The <Todo/> component", () => {
   it("should match its snapshot", () => {

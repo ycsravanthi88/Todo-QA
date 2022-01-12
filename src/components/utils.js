@@ -1,4 +1,4 @@
-export const INITIAL_LABEL_STAT = {
+export const INITIAL_LABEL_STATE = {
   lightgreen: false,
   lightsalmon: false,
   mediumpurple: false,

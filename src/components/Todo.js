@@ -4,157 +4,151 @@ import { LABEL_NAMES } from "./utils";
 import ViewLabel from "./ViewLabel";
 
 function usePrevious(value) {
-    const ref = useRef();
-    useEffect(() => {
-        ref.current = value;
-    });
-    return ref.current;
+  const ref = useRef();
+  useEffect(() => {
+    ref.current = value;
+  });
+  return ref.current;
 }
 
 function renderLabels(labels) {
-    return (
-        <>
-            {labels.map((color, index) => {
-                return <ViewLabel color={color} key={index} />;
-            })}
-        </>
-    );
+  return (
+    <>
+      {labels.map((color, index) => {
+        return <ViewLabel color={color} key={index} />;
+      })}
+    </>
+  );
 }
 
 function renderLabelOptions(newLabels, handleLabelChange) {
-    return (
-        <div className="form-labels-container">
-            {LABEL_NAMES.map((color, index) => {
-                return (
-                    <FormLabel
-                        key={index}
-                        color={color}
-                        handleLabelChange={handleLabelChange}
-                        checked={newLabels[color]}
-                    />
-                );
-            })}
-        </div>
-    );
+  return (
+    <div className="form-labels-container">
+      {LABEL_NAMES.map((color, index) => {
+        return (
+          <FormLabel
+            key={index}
+            color={color}
+            handleLabelChange={handleLabelChange}
+            checked={newLabels[color]}
+          />
+        );
+      })}
+    </div>
+  );
 }
 
 export default function Todo(props) {
-    const { labels } = props;
-    const [isEditing, setEditing] = useState(false);
-    const [newName, setNewName] = useState("");
-    // initial state of edit task should be existing label states
-    const [newLabels, setNewLabels] = useState({
-        lightgreen: labels.includes("lightgreen"),
-        lightsalmon: labels.includes("lightsalmon"),
-        mediumpurple: labels.includes("mediumpurple"),
-    });
+  const { labels } = props;
+  const [isEditing, setEditing] = useState(false);
+  const [newName, setNewName] = useState("");
+  // initial state of edit task should be existing label states
+  const [newLabels, setNewLabels] = useState({
+    lightgreen: labels.includes("lightgreen"),
+    lightsalmon: labels.includes("lightsalmon"),
+    mediumpurple: labels.includes("mediumpurple"),
+  });
 
-    const editFieldRef = useRef(null);
-    const editButtonRef = useRef(null);
+  const editFieldRef = useRef(null);
+  const editButtonRef = useRef(null);
 
-    const wasEditing = usePrevious(isEditing);
+  const wasEditing = usePrevious(isEditing);
 
-    function handleChange(e) {
-        setNewName(e.target.value);
+  function handleChange(e) {
+    setNewName(e.target.value);
+  }
+
+  function handleLabelChange(e) {
+    const name = e.target.value;
+    setNewLabels({ ...newLabels, [name]: !newLabels[name] });
+  }
+
+  function handleSubmit(e) {
+    e.preventDefault();
+    if (!newName.trim()) {
+      return;
     }
+    const newTaskLabels = LABEL_NAMES.filter((n) => newLabels[n]);
+    props.editTask(props.id, newName, newTaskLabels);
+    setNewName("");
+    setEditing(false);
+  }
 
-    function handleLabelChange(e) {
-        const name = e.target.value;
-        setNewLabels({ ...newLabels, [name]: !newLabels[name] });
+  const editingTemplate = (
+    <form className="stack-small" onSubmit={handleSubmit}>
+      <div className="form-group">
+        <label className="todo-label" htmlFor={props.id}>
+          New name for {props.name}
+        </label>
+        <input
+          id={props.id}
+          className="todo-text"
+          type="text"
+          value={newName}
+          onChange={handleChange}
+          ref={editFieldRef}
+        />
+      </div>
+      {renderLabelOptions(newLabels, handleLabelChange)}
+      <div className="btn-group">
+        <button
+          type="button"
+          className="btn todo-cancel"
+          onClick={() => setEditing(false)}
+        >
+          Cancel
+          <span className="visually-hidden">renaming {props.name}</span>
+        </button>
+        <button type="submit" className="btn btn__primary todo-edit">
+          Save
+          <span className="visually-hidden">new name for {props.name}</span>
+        </button>
+      </div>
+    </form>
+  );
+
+  const viewTemplate = (
+    <div className="stack-small">
+      <div className="c-cb">
+        <input
+          id={props.id}
+          type="checkbox"
+          defaultChecked={props.completed}
+          onChange={() => props.toggleTaskCompleted(props.id)}
+        />
+        <label className="todo-label" htmlFor={props.id}>
+          {props.name}
+        </label>
+      </div>
+      {renderLabels(labels)}
+      <div className="btn-group">
+        <button
+          type="button"
+          className="btn"
+          onClick={() => setEditing(true)}
+          ref={editButtonRef}
+        >
+          Edit <span className="visually-hidden">{props.name}</span>
+        </button>
+        <button
+          type="button"
+          className="btn btn__danger"
+          onClick={() => props.deleteTask(props.id)}
+        >
+          Delete <span className="visually-hidden">{props.name}</span>
+        </button>
+      </div>
+    </div>
+  );
+
+  useEffect(() => {
+    if (!wasEditing && isEditing) {
+      editFieldRef.current.focus();
     }
-
-    function handleSubmit(e) {
-        e.preventDefault();
-        if (!newName.trim()) {
-            return;
-        }
-        const newTaskLabels = LABEL_NAMES.filter((n) => newLabels[n]);
-        props.editTask(props.id, newName, newTaskLabels);
-        setNewName("");
-        setEditing(false);
+    if (wasEditing && !isEditing) {
+      editButtonRef.current.focus();
     }
+  }, [wasEditing, isEditing]);
 
-    const editingTemplate = (
-        <form className="stack-small" onSubmit={handleSubmit}>
-            <div className="form-group">
-                <label className="todo-label" htmlFor={props.id}>
-                    New name for {props.name}
-                </label>
-                <input
-                    id={props.id}
-                    className="todo-text"
-                    type="text"
-                    value={newName}
-                    onChange={handleChange}
-                    ref={editFieldRef}
-                />
-            </div>
-            {renderLabelOptions(newLabels, handleLabelChange)}
-            <div className="btn-group">
-                <button
-                    type="button"
-                    className="btn todo-cancel"
-                    onClick={() => setEditing(false)}
-                >
-                    Cancel
-                    <span className="visually-hidden">
-                        renaming {props.name}
-                    </span>
-                </button>
-                <button type="submit" className="btn btn__primary todo-edit">
-                    Save
-                    <span className="visually-hidden">
-                        new name for {props.name}
-                    </span>
-                </button>
-            </div>
-        </form>
-    );
-
-    const viewTemplate = (
-        <div className="stack-small">
-            <div className="c-cb">
-                <input
-                    id={props.id}
-                    type="checkbox"
-                    defaultChecked={props.completed}
-                    onChange={() => props.toggleTaskCompleted(props.id)}
-                />
-                <label className="todo-label" htmlFor={props.id}>
-                    {props.name}
-                </label>
-            </div>
-            {renderLabels(labels)}
-            <div className="btn-group">
-                <button
-                    type="button"
-                    className="btn"
-                    onClick={() => setEditing(true)}
-                    ref={editButtonRef}
-                >
-                    Edit <span className="visually-hidden">{props.name}</span>
-                </button>
-                <button
-                    type="button"
-                    className="btn btn__danger"
-                    onClick={() => props.deleteTask(props.id)}
-                >
-                    Delete <span className="visually-hidden">{props.name}</span>
-                </button>
-            </div>
-        </div>
-    );
-
-    useEffect(() => {
-        if (!wasEditing && isEditing) {
-            editFieldRef.current.focus();
-        }
-        if (wasEditing && !isEditing) {
-            editButtonRef.current.focus();
-        }
-    }, [wasEditing, isEditing]);
-
-    return (
-        <li className="todo">{isEditing ? editingTemplate : viewTemplate}</li>
-    );
+  return <li className="todo">{isEditing ? editingTemplate : viewTemplate}</li>;
 }

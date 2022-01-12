@@ -2,14 +2,6 @@ import React, { useState } from "react";
 import FormLabel from "./FormLabel";
 import { INITIAL_LABEL_STATE, LABEL_NAMES } from "./utils";
 
-export function isStringValid(string) {
-  if (string.length > 0 && typeof string === "string") {
-    return true;
-  } else {
-    return false;
-  }
-}
-
 function renderLabelsOptions(labels, handleLabelChange) {
   return (
     <div className="form-labels-container">
@@ -35,7 +27,7 @@ function Form(props) {
 
   function handleSubmit(e) {
     e.preventDefault();
-    if (!isStringValid(name)) {
+    if (!name.trim()) {
       setError(true);
       return;
     }

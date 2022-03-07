@@ -18,6 +18,7 @@ describe("The <Todo/> component", () => {
         <Todo
           id={TODO[0].id}
           name={TODO[0].name}
+          labels={TODO[0].labels}
           completed={TODO[0].completed}
         />
       )

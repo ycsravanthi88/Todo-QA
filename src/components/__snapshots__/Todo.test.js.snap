@@ -23,6 +23,24 @@ exports[`The <Todo/> component should match its snapshot 1`] = `
         Eat
       </label>
     </div>
+    <span
+      className="show-labels"
+      style={
+        Object {
+          "backgroundColor": "lightgreen",
+        }
+      }
+      value="lightgreen"
+    />
+    <span
+      className="show-labels"
+      style={
+        Object {
+          "backgroundColor": "lightsalmon",
+        }
+      }
+      value="lightsalmon"
+    />
     <div
       className="btn-group"
     >
